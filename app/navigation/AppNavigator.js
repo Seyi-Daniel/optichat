@@ -1,51 +1,41 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import React from "react";
+import { createStackNavigator } from "@react-navigation/stack";
 
-import AccountNavigator from "./AccountNavigator";
-import FeedNavigator from "./FeedNavigator";
-import ListingEditScreen from "../screens/ListingEditScreen";
-import NewListingButton from "./NewListingButton";
-import routes from "./routes";
+import AccountScreen from "../screens/AccountScreen";
+import ChatScreen from "../screens/ChatScreen";
+import ChatHeader from "../components/ChatHeader";
+import MessagesHeader from "../components/MessagesHeader";
+import MessagesScreen from "../screens/MessagesScreen";
 
-const Tab = createBottomTabNavigator();
+import colors from "../config/colors";
 
-export default AppNavigator = () => (
-  <Tab.Navigator>
-    <Tab.Screen
-      name="Feed"
-      component={FeedNavigator}
+const Stack = createStackNavigator();
+
+export default AccountNavigator = () => (
+  <Stack.Navigator
+    screenOptions={{
+      headerTintColor: "white",
+      headerStyle: {
+        backgroundColor: colors.middle,
+      },
+    }}
+  >
+    <Stack.Screen
+      name="Messages"
+      component={MessagesScreen}
       options={{
-        tabBarIcon: ({ color, size }) => (
-          <MaterialCommunityIcons name="home" color={color} size={size} />
-        ),
+        headerTitle: () => <MessagesHeader />,
       }}
     />
-    <Tab.Screen
-      name="ListingEdit"
-      component={ListingEditScreen}
-      options={({ navigation }) => ({
-        tabBarButton: () => (
-          <NewListingButton
-            onPress={() => navigation.navigate(routes.LISTING_EDIT)}
-          />
-        ),
-        tabBarIcon: ({ color, size }) => (
-          <MaterialCommunityIcons
-            name="plus-circle"
-            color={color}
-            size={size}
-          />
+    <Stack.Screen name="Account" component={AccountScreen} />
+    <Stack.Screen
+      name="Chat"
+      component={ChatScreen}
+      options={({ route }) => ({
+        headerTitle: () => (
+          <ChatHeader title={route.params.accountName} image />
         ),
       })}
     />
-    <Tab.Screen
-      name="Account"
-      component={AccountNavigator}
-      options={{
-        tabBarIcon: ({ color, size }) => (
-          <MaterialCommunityIcons name="account" color={color} size={size} />
-        ),
-      }}
-    />
-  </Tab.Navigator>
+  </Stack.Navigator>
 );

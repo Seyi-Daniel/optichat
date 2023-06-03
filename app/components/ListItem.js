@@ -1,50 +1,30 @@
 import React from "react";
 import { View, StyleSheet, Image, TouchableHighlight } from "react-native";
-import {
-  GestureHandlerRootView,
-  Swipeable,
-} from "react-native-gesture-handler";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import colors from "../config/colors";
 
 import AppText from "./AppText";
-import ListItemDeleteAction from "./ListItemDeleteAction";
 
-function ListItem({
-  image,
-  IconComponent,
-  title,
-  subTitle,
-  onPress,
-  renderRightActions,
-}) {
+function ListItem({ image, IconComponent, title, subTitle, onPress }) {
   return (
-    <GestureHandlerRootView>
-      <Swipeable renderRightActions={renderRightActions}>
-        <TouchableHighlight underlayColor={colors.light} onPress={onPress}>
-          <View style={styles.container}>
-            {IconComponent}
-            {image && <Image source={image} style={styles.image}></Image>}
-            <View style={styles.detailsContainer}>
-              <AppText style={styles.title} numberOfLines={1}>
-                {title}
-              </AppText>
-              {subTitle && (
-                <AppText style={styles.subTitle} numberOfLines={2}>
-                  {subTitle}
-                </AppText>
-              )}
-            </View>
-            <MaterialCommunityIcons
-              color={colors.medium}
-              name="chevron-right"
-              size={25}
-            />
-          </View>
-        </TouchableHighlight>
-      </Swipeable>
-    </GestureHandlerRootView>
+    <TouchableHighlight underlayColor={colors.light} onPress={onPress}>
+      <View style={styles.container}>
+        {IconComponent}
+        {image && <Image source={image} style={styles.image}></Image>}
+        <View style={styles.detailsContainer}>
+          <AppText style={styles.title} numberOfLines={1}>
+            {title}
+          </AppText>
+          {subTitle && (
+            <AppText style={styles.subTitle} numberOfLines={2}>
+              {subTitle}
+            </AppText>
+          )}
+        </View>
+        <MaterialCommunityIcons color={colors.green} name="circle" size={15} />
+      </View>
+    </TouchableHighlight>
   );
 }
 
@@ -54,7 +34,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     flexDirection: "row",
-    padding: 15,
+    padding: 20,
   },
   detailsContainer: {
     flex: 1,

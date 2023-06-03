@@ -1,68 +1,125 @@
-import React, { useState } from "react";
-import { View, FlatList, StyleSheet } from "react-native";
+import React, { useState, useEffect, useContext } from "react";
+import { FlatList, Image, StyleSheet, Text, View } from "react-native";
+import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
+
+import ActivityIndicator from "../components/ActivityIndicator";
+import accountApi from "../api/account";
+import contactsApi from "../api/contacts";
+
 import ListItem from "../components/ListItem";
-import Screen from "../components/Screen";
 import ListItemSeperator from "../components/ListItemSeperator";
-import ListItemDeleteAction from "../components/ListItemDeleteAction";
 
-const initialMessages = [
-  {
-    id: 1,
-    title: "T1",
-    description: "D1",
-    image: require("../assets/mosh.jpg"),
-  },
-  {
-    id: 2,
-    title: "T2",
-    description: "D2",
-    image: require("../assets/mosh.jpg"),
-  },
-];
+import routes from "../navigation/routes";
+import AuthContext from "../auth/context";
 
-function MessagesScreen(props) {
+import useApi from "../hooks/useApi";
+import colors from "../config/colors";
+import AppButton from "../components/AppButton";
+
+const initialMessages = [];
+
+function MessagesScreen({ navigation }) {
+  const { user } = useContext(AuthContext);
+
   const [messages, setMessages] = useState(initialMessages);
   const [refreshing, setRefreshing] = useState(false);
 
-  const handleDelete = (message) => {
-    setMessages(messages.filter((m) => m.id !== message.id));
-  };
+  const {
+    data: account,
+    loading,
+    request: loadAccount,
+  } = useApi(accountApi.getAccount);
+
+  const { data: contacts, request: loadContacts } = useApi(
+    contactsApi.getContacts
+  );
+
+  useEffect(() => {
+    loadAccount(user.nameid);
+    loadContacts();
+  }, []);
 
   return (
-    <Screen>
-      <View>
-        <FlatList
-          data={messages}
-          keyExtractor={(messages) => messages.id.toString()}
-          renderItem={({ item }) => (
-            <ListItem
-              title={item.title}
-              subTitle={item.description}
-              image={item.image}
-              onPress={() => console.log("Message Selected", item)}
-              renderRightActions={() => (
-                <ListItemDeleteAction onPress={() => handleDelete(item)} />
-              )}
+    <>
+      <ActivityIndicator visible={loading} />
+      {account.data && (
+        <View style={{ flex: 1 }}>
+          <View style={styles.welcome}>
+            <View>
+              <Text>Welcome</Text>
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 20,
+                }}
+              >
+                {account.data.firstName} {account.data.lastName}
+              </Text>
+              {/* <Text>{account.data.balance}</Text> */}
+            </View>
+            <Image
+              source={{ uri: account.data.profilePictureUrl }}
+              style={styles.image}
             />
-          )}
-          ItemSeparatorComponent={ListItemSeperator}
-          refreshing={refreshing}
-          onRefresh={() => {
-            setMessages([
-              {
-                id: 2,
-                title: "T2",
-                description: "D2",
-                image: require("../assets/mosh.jpg"),
-              },
-            ]);
-          }}
-        />
-      </View>
-    </Screen>
+          </View>
+          {/* <ListItem
+        title="Prime"
+        subTitle="Hello Tolani! How can I assist you?"
+        image={require("../assets/mosh.jpg")}
+        onPress={() => console.log("Message Selected")}
+      /> */}
+          <FlatList
+            // style={{ backgroundColor: "red" }}
+            data={contacts.data}
+            keyExtractor={(chat) => chat.beneficiaryNumber.toString()}
+            renderItem={({ item }) => (
+              <ListItem
+                title={item.accountName}
+                subTitle={item.beneficiaryNumber}
+                image={{ uri: item.profilePicture }}
+                onPress={() => navigation.navigate(routes.CHAT, item)}
+              />
+            )}
+            ItemSeparatorComponent={ListItemSeperator}
+            refreshing={refreshing}
+            onRefresh={() => {}}
+          />
+          <AppButton
+            style={styles.contactButton}
+            onPress={() => navigation.push(routes.MESSAGES)}
+          >
+            <MaterialIcons name="chat-bubble-outline" size={24} />
+          </AppButton>
+        </View>
+      )}
+    </>
   );
 }
 
-export default MessagesScreen;
+const styles = StyleSheet.create({
+  image: {
+    width: 75,
+    height: 75,
+    borderRadius: 35,
+  },
+  welcome: {
+    alignItems: "center",
+    borderBottomWidth: 1,
+    borderBottomColor: colors.light2,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+  },
+  contactButton: {
+    backgroundColor: colors.blue,
+    borderRadius: 40,
+    height: 75,
+    left: 370,
+    bottom: 40,
+    position: "relative",
+    width: 75,
+  },
+});
 
-const styles = StyleSheet.create({});
+export default MessagesScreen;
