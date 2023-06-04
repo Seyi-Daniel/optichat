@@ -49,6 +49,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     height: "auto",
+    width: "80%",
     marginLeft: "auto",
     marginRight: "auto",
     padding: 10,
@@ -56,15 +57,16 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   image: {
+    marginTop: 10,
+    marginBottom: 10,
     width: 200,
     height: 200,
     borderRadius: 100,
-    marginRight: 10,
   },
   Name: {
     color: "#207F95",
     fontWeight: "bold",
-    fontSize: 20,
+    fontSize: 15,
     textAlign: "center",
   },
   accountNumber: {
