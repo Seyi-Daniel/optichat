@@ -23,7 +23,11 @@ function MessagesHeader({ title }) {
           />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate("Account")}>
-          <Ionicons name="settings-outline" size={30} color={colors.white} />
+          <MaterialCommunityIcons
+            name="account"
+            size={30}
+            color={colors.white}
+          />
         </TouchableOpacity>
       </View>
     </View>

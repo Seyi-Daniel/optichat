@@ -18,7 +18,7 @@ import AppButton from "../components/AppButton";
 
 const initialMessages = [];
 
-function MessagesScreen({ navigation }) {
+function BotTransactionScreen({ navigation }) {
   const { user } = useContext(AuthContext);
 
   const [messages, setMessages] = useState(initialMessages);
@@ -44,30 +44,6 @@ function MessagesScreen({ navigation }) {
       <ActivityIndicator visible={loading} />
       {account.data && (
         <View style={{ flex: 1 }}>
-          <View style={styles.welcome}>
-            <View>
-              <Text>Welcome</Text>
-              <Text
-                style={{
-                  fontWeight: "bold",
-                  fontSize: 20,
-                }}
-              >
-                {account.data.firstName} {account.data.lastName}
-              </Text>
-              {/* <Text>{account.data.balance}</Text> */}
-            </View>
-            <Image
-              source={{ uri: account.data.profilePictureUrl }}
-              style={styles.image}
-            />
-          </View>
-          <ListItem
-            title="Prime"
-            subTitle="Hello Tolani! How can I assist you?"
-            image={require("../assets/optilogo.png")}
-            onPress={() => navigation.navigate("BotChat")}
-          />
           <ListItemSeperator />
           <FlatList
             // style={{ backgroundColor: "red" }}
@@ -86,12 +62,6 @@ function MessagesScreen({ navigation }) {
             refreshing={refreshing}
             onRefresh={() => {}}
           />
-          <AppButton
-            style={styles.contactButton}
-            onPress={() => navigation.push(routes.MESSAGES)}
-          >
-            <MaterialIcons name="chat-bubble-outline" size={24} />
-          </AppButton>
         </View>
       )}
     </>
@@ -124,4 +94,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MessagesScreen;
+export default BotTransactionScreen;

@@ -3,8 +3,7 @@ import { FlatList, Image, StyleSheet, Text, View } from "react-native";
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 
 import ActivityIndicator from "../components/ActivityIndicator";
-import accountApi from "../api/account";
-import contactsApi from "../api/contacts";
+import userHistoryApi from "../api/userHistory";
 
 import ListItem from "../components/ListItem";
 import ListItemSeperator from "../components/ListItemSeperator";
@@ -18,80 +17,43 @@ import AppButton from "../components/AppButton";
 
 const initialMessages = [];
 
-function MessagesScreen({ navigation }) {
+function UserTransactionScreen({ navigation }) {
   const { user } = useContext(AuthContext);
 
   const [messages, setMessages] = useState(initialMessages);
   const [refreshing, setRefreshing] = useState(false);
 
   const {
-    data: account,
+    data: userHistory,
     loading,
-    request: loadAccount,
-  } = useApi(accountApi.getAccount);
-
-  const { data: contacts, request: loadContacts } = useApi(
-    contactsApi.getContacts
-  );
+    request: loadUserHistory,
+  } = useApi(userHistoryApi.getUserHistory);
 
   useEffect(() => {
-    loadAccount(user.nameid);
-    loadContacts();
+    loadUserHistory();
   }, []);
 
+  console.log(userHistory.data);
   return (
     <>
       <ActivityIndicator visible={loading} />
-      {account.data && (
+      {userHistory.data && (
         <View style={{ flex: 1 }}>
-          <View style={styles.welcome}>
-            <View>
-              <Text>Welcome</Text>
-              <Text
-                style={{
-                  fontWeight: "bold",
-                  fontSize: 20,
-                }}
-              >
-                {account.data.firstName} {account.data.lastName}
-              </Text>
-              {/* <Text>{account.data.balance}</Text> */}
-            </View>
-            <Image
-              source={{ uri: account.data.profilePictureUrl }}
-              style={styles.image}
-            />
-          </View>
-          <ListItem
-            title="Prime"
-            subTitle="Hello Tolani! How can I assist you?"
-            image={require("../assets/optilogo.png")}
-            onPress={() => navigation.navigate("BotChat")}
-          />
           <ListItemSeperator />
           <FlatList
             // style={{ backgroundColor: "red" }}
-            data={contacts.data}
-            keyExtractor={(chat) => chat.beneficiaryNumber.toString()}
+            data={userHistory.data}
+            keyExtractor={(person) => person.id.toString()}
             renderItem={({ item }) => (
               <ListItem
-                badge={{ name: "circle", color: colors.green }}
-                title={item.accountName}
-                subTitle={item.beneficiaryNumber}
+                title={item.firstName}
                 image={{ uri: item.profilePicture }}
-                onPress={() => navigation.navigate(routes.CHAT, item)}
               />
             )}
             ItemSeparatorComponent={ListItemSeperator}
             refreshing={refreshing}
             onRefresh={() => {}}
           />
-          <AppButton
-            style={styles.contactButton}
-            onPress={() => navigation.push(routes.MESSAGES)}
-          >
-            <MaterialIcons name="chat-bubble-outline" size={24} />
-          </AppButton>
         </View>
       )}
     </>
@@ -124,4 +86,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MessagesScreen;
+export default UserTransactionScreen;

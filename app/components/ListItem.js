@@ -6,7 +6,7 @@ import colors from "../config/colors";
 
 import AppText from "./AppText";
 
-function ListItem({ image, IconComponent, title, subTitle, onPress }) {
+function ListItem({ badge, image, IconComponent, title, subTitle, onPress }) {
   return (
     <TouchableHighlight underlayColor={colors.light} onPress={onPress}>
       <View style={styles.container}>
@@ -22,7 +22,13 @@ function ListItem({ image, IconComponent, title, subTitle, onPress }) {
             </AppText>
           )}
         </View>
-        <MaterialCommunityIcons color={colors.green} name="circle" size={15} />
+        {badge && (
+          <MaterialCommunityIcons
+            color={badge.color}
+            name={badge.name}
+            size={15}
+          />
+        )}
       </View>
     </TouchableHighlight>
   );

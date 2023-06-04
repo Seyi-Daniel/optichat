@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
       borderBottomStartRadius: 10,
     },
     Received: {
-      backgroundColor: colors.green,
+      backgroundColor: colors.blue,
       padding: 10,
       borderTopStartRadius: 10,
       borderTopEndRadius: 10,

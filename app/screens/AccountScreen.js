@@ -44,7 +44,7 @@ function AccountScreen({ navigation }) {
         <ListItem
           title="Transaction History"
           IconComponent={<Icon name="history" backgroundColor={colors.green} />}
-          onPress={() => logOut()}
+          onPress={() => navigation.navigate("History")}
         />
       </View>
       <View style={styles.container}>
